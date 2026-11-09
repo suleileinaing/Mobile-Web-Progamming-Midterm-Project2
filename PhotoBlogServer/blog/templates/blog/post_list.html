@@ -1,0 +1,49 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Photo Blog</title>
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}" />
+    <link rel="icon" type="image/png" href="{% static 'blog/favicon.png' %}" />
+  </head>
+
+  <body>
+    <header>
+      <h1>My Photo Blog</h1>
+      <a
+        class="upload-button"
+        href="{% url 'post_new' %}"
+        aria-label="새 게시물 작성"
+        >+</a
+      >
+    </header>
+
+    <main>
+      {% for post in posts %}
+      <article>
+        <h2>
+          <a href="{% url 'post_detail' post.pk %}"> {{ post.title }} </a>
+        </h2>
+
+        <p class="date">
+          {{ post.author }} · {{ post.published_date|date:"Y-m-d H:i" }}
+        </p>
+
+        {% if post.image %}
+        <a class="photo-link" href="{% url 'post_detail' post.pk %}">
+          <img src="{{ post.image.url }}" alt="{{ post.title }}" />
+        </a>
+        {% endif %}
+
+        <div class="text">{{ post.text|linebreaks }}</div>
+      </article>
+      {% empty %}
+      <article>
+        <p>아직 게시된 사진이 없습니다.</p>
+      </article>
+      {% endfor %}
+    </main>
+  </body>
+</html>

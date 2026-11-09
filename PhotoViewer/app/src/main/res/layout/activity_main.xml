@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_load"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:text="동기화"
+            android:textColor="#000000"
+            app:backgroundTint="#4D07A9F2"
+            app:cornerRadius="12dp"
+            app:strokeColor="#000000"
+            app:strokeWidth="1dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_save"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="새로운 이미지 게시"
+            android:textColor="#000000"
+            app:backgroundTint="#4D07A9F2"
+            app:cornerRadius="12dp"
+            app:strokeColor="#000000"
+            app:strokeWidth="1dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAllPosts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="전체"
+            android:textColor="#000000"
+            app:backgroundTint="#4D07A9F2"
+            app:cornerRadius="12dp"
+            app:strokeColor="#000000"
+            app:strokeWidth="1dp"
+            android:layout_marginEnd="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSavedPosts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="♥ 저장한 게시물"
+            android:textColor="#000000"
+            app:backgroundTint="#4D07A9F2"
+            app:cornerRadius="12dp"
+            app:strokeColor="#000000"
+            app:strokeWidth="1dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textSize="14sp"
+            android:text="동기화 버튼을 눌러 주세요." />
+
+        <Spinner
+            android:id="@+id/spinnerSort"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:spinnerMode="dropdown"
+            android:contentDescription="Post display order" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

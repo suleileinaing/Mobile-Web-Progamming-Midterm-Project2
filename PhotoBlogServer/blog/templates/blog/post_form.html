@@ -1,0 +1,42 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      {% if is_edit %}게시물 수정{% else %}새 게시물{% endif %} | My Photo Blog
+    </title>
+
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="{% static 'blog/favicon.svg' %}"
+    />
+  </head>
+
+  <body>
+    <header>
+      <h1>{% if is_edit %}게시물 수정{% else %}새 게시물{% endif %}</h1>
+      <p>사진과 이야기를 남겨 보세요.</p>
+
+      <nav>
+        <a href="{% url 'post_list' %}">← 갤러리로 돌아가기</a>
+      </nav>
+    </header>
+
+    <main class="upload-page">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %} {{ form.as_p }}
+
+        <div class="form-actions">
+          <a href="{% url 'post_list' %}">취소</a>
+          <button type="submit">
+            {% if is_edit %}수정 저장{% else %}게시하기{% endif %}
+          </button>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ post.title }} | My Photo Blog</title>
+
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}" />
+    <link rel="icon" type="image/png" href="{% static 'blog/favicon.png' %}" />
+  </head>
+
+  <body>
+    <header>
+      <h1>My Photo Blog</h1>
+
+      <nav>
+        <a href="{% url 'post_list' %}">← 홈으로 돌아가기</a>
+      </nav>
+    </header>
+
+    <main class="post-detail">
+      {% if request.user == post.author %}
+      <div class="post-actions">
+        <a href="{% url 'post_edit' post.pk %}">게시물 수정</a>
+      </div>
+      {% endif %}
+      <article>
+        <h2>{{ post.title }}</h2>
+
+        <p class="date">
+          {{ post.author }} · {{ post.published_date|date:"Y-m-d H:i" }}
+        </p>
+
+        {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" />
+        {% endif %}
+
+        <div class="text">{{ post.text|linebreaks }}</div>
+      </article>
+    </main>
+  </body>
+</html>

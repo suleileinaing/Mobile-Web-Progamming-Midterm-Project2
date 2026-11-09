@@ -1,0 +1,29 @@
+# Local credentials
+local.properties
+.django-secret-key
+.env
+.env.*
+
+# Python and Django
+.venv/
+.venv02/
+__pycache__/
+*.pyc
+*.sqlite3
+.coverage
+htmlcov/
+/PhotoBlogServer/media/
+
+# Android
+.gradle/
+.idea/
+*.iml
+build/
+
+# YOLO output and downloaded weights
+/YOLOv5/runs/
+/YOLOv5/*.pt
+
+# macOS and Word temporary files
+.DS_Store
+~$*

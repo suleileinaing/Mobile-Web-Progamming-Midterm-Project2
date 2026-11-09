@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <EditText
+            android:id="@+id/editTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="제목"
+            android:inputType="textCapSentences"
+            android:maxLength="200" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:hint="내용"
+            android:inputType="textMultiLine"
+            android:minLines="3" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnChooseImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="사진 선택"
+            android:textColor="#000000"
+            app:backgroundTint="#4D07A9F2"
+            app:cornerRadius="12dp"
+            app:strokeColor="#000000"
+            app:strokeWidth="1dp"/>
+
+        <TextView
+            android:id="@+id/textSelectedImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="선택한 사진이 없습니다." />
+
+        <ImageView
+            android:id="@+id/imagePreview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="Selected photo preview"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnRemoveImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="선택한 사진 제거"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</ScrollView>
