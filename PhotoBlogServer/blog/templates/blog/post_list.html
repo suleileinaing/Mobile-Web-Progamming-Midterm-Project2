@@ -1,5 +1,4 @@
-{% load static %}
-{% load tz %}
+{% load static %} {% load tz %}
 <!doctype html>
 <html lang="ko">
   <head>
@@ -14,14 +13,18 @@
     <header>
       <h1>My Photo Blog</h1>
       <form method="get">
-        <label>시작일 <input type="date" name="start" value="{{ start_date }}"></label>
-        <label>종료일 <input type="date" name="end" value="{{ end_date }}"></label>
+        <label
+          >시작일 <input type="date" name="start" value="{{ start_date }}"
+        /></label>
+        <label
+          >종료일 <input type="date" name="end" value="{{ end_date }}"
+        /></label>
         <button type="submit">검색</button>
         <a href="{{ request.path }}">초기화</a>
       </form>
 
       {% if date_error %}
-          <p role="alert">{{ date_error }}</p>
+      <p role="alert">{{ date_error }}</p>
       {% endif %}
       <a
         class="upload-button"
@@ -39,7 +42,8 @@
         </h2>
 
         <p class="date">
-          {{ post.author }} ·{{ post.published_date|timezone:"Asia/Seoul"|date:"Y-m-d H:i" }}
+          {{ post.author }} ·{{
+          post.published_date|timezone:"Asia/Seoul"|date:"Y-m-d H:i" }}
         </p>
 
         {% if post.image %}
@@ -52,7 +56,11 @@
       </article>
       {% empty %}
       <article>
+        {% if not date_error %} {% if start_date or end_date %}
+        <p>선택한 기간에 게시된 사진이 없습니다.</p>
+        {% else %}
         <p>아직 게시된 사진이 없습니다.</p>
+        {% endif %} {% endif %}
       </article>
       {% endfor %}
     </main>
