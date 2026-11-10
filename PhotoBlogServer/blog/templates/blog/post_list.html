@@ -42,8 +42,7 @@
         </h2>
 
         <p class="date">
-          {{ post.author }} ·{{
-          post.published_date|timezone:"Asia/Seoul"|date:"Y-m-d H:i" }}
+          {{ post.author }} · {{post.published_date|timezone:"Asia/Seoul"|date:"Y-m-d H:i" }}
         </p>
 
         {% if post.image %}
