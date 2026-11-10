@@ -3,12 +3,14 @@ import os
 import requests
 from datetime import datetime
 import pathlib
-
+from time import monotonic
 import cv2
 
 class ChangeDetection:
     def __init__(self, names):
         self.result_prev = [0 for _ in range(len(names))]
+        self.upload_cooldown_seconds = 10
+        self.last_upload_at = {}
         self.title = ""
         self.text = ""
 
@@ -34,20 +36,67 @@ class ChangeDetection:
         print("Django login successful.")
         
     def add(self, names, detected_current, save_dir, image):
-        self.title = ''
-        self.text = ''
-        change_flag = 0 #변화 감지 플레그
-        i = 0
-        while i < len(self.result_prev):
-            if self.result_prev[i]==0 and detected_current[i]==1:
-                change_flag = 1
-                self.title = names[i]
-                self.text += names[i] + ", "
-            i += 1
-            
-        self.result_prev = detected_current[:] # 객체 검출 상태 저장
-        if change_flag==1:
-            self.send(save_dir, image)
+        now = monotonic()
+        appeared = []
+
+        for i in range(len(self.result_prev)):
+            if self.result_prev[i] != 0 or detected_current[i] != 1:
+                continue
+
+            name = names[i]
+            last_upload = self.last_upload_at.get(name)
+
+            if last_upload is not None:
+                elapsed = now - last_upload
+                if elapsed < self.upload_cooldown_seconds:
+                    print(f"Skipped duplicate: {name} ({elapsed:.1f}s)")
+                    continue
+
+            appeared.append(name)
+
+        self.result_prev = detected_current[:]
+
+        if appeared:
+            person_detected = any(
+                detected_current[i] == 1 and names[i] == "person"
+                for i in range(len(detected_current))
+            )
+            if person_detected:
+                window = "Confirm person photo upload"
+                preview = image.copy()
+                cv2.putText(
+                    preview,
+                    "Y: Upload | N or Esc: Skip",
+                    (20, 45),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 255, 255),
+                    2,
+                )
+                cv2.imshow(window, preview)
+
+                try:
+                    while True:
+                        key = cv2.waitKey(50) & 0xFF
+                        if cv2.getWindowProperty(window, cv2.WND_PROP_VISIBLE) < 1:
+                            print("Upload skipped by user.")
+                            return
+                        if key in (ord("y"), ord("Y")):
+                            break
+                        if key in (ord("n"), ord("N"), 27):
+                            print("Upload skipped by user.")
+                            return
+                finally:
+                    if cv2.getWindowProperty(window, cv2.WND_PROP_VISIBLE) >= 1:
+                        cv2.destroyWindow(window)
+                
+            self.title = appeared[-1]
+            self.text = ", ".join(appeared)
+
+            if self.send(save_dir, image):
+                uploaded_at = monotonic()
+                for name in appeared:
+                    self.last_upload_at[name] = uploaded_at
             
             
     def send(self, save_dir, image):
@@ -73,6 +122,14 @@ class ChangeDetection:
         'published_date' : now
         }
         
-        file = {'image' : open(full_path,'rb')}
-        res = requests.post(self.host + '/api_root/Post/', data=data, files=file, headers=headers)
+        with open(full_path, "rb") as image_file:
+            res = requests.post(
+                self.host + "/api_root/Post/",
+                data=data,
+                files={"image": image_file},
+                headers=headers,
+                timeout=30,
+            )
+
         print(res)
+        return res.status_code == 201
