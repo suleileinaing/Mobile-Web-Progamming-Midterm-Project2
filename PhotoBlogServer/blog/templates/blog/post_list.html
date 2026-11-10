@@ -12,6 +12,16 @@
   <body>
     <header>
       <h1>My Photo Blog</h1>
+      <form method="get">
+        <label>시작일 <input type="date" name="start" value="{{ start_date }}"></label>
+        <label>종료일 <input type="date" name="end" value="{{ end_date }}"></label>
+        <button type="submit">검색</button>
+        <a href="{{ request.path }}">초기화</a>
+      </form>
+
+      {% if date_error %}
+          <p role="alert">{{ date_error }}</p>
+      {% endif %}
       <a
         class="upload-button"
         href="{% url 'post_new' %}"

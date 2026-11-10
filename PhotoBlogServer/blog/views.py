@@ -14,7 +14,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
+from zoneinfo import ZoneInfo
 
+from django.db.models.functions import TruncDate
+from django.utils.dateparse import parse_date
 class BlogImages(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -34,11 +37,43 @@ def post_list(request):
     posts = Post.objects.filter(
         published_date__isnull=False
     ).order_by('-published_date', '-id')
+    
+    start_value = request.GET.get("start", "")
+    end_value = request.GET.get("end", "")
+    date_error = ""
+
+    try:
+        start = parse_date(start_value) if start_value else None
+        end = parse_date(end_value) if end_value else None
+
+        if (start_value and start is None) or (end_value and end is None):
+            raise ValueError
+
+        if start and end and start > end:
+            date_error = "시작일은 종료일보다 늦을 수 없습니다."
+    except ValueError:
+        date_error = "올바른 날짜를 입력해 주세요."
+
+    if date_error:
+        posts = posts.none()
+    elif start or end:
+        posts = posts.annotate(
+            published_day=TruncDate("published_date", tzinfo=ZoneInfo("Asia/Seoul"))
+        )
+        if start:
+            posts = posts.filter(published_day__gte=start)
+        if end:
+            posts = posts.filter(published_day__lte=end)
 
     return render(
         request,
         'blog/post_list.html',
-        {'posts': posts},
+        {
+            "posts": posts,
+            "start_date": start_value,
+            "end_date": end_value,
+            "date_error": date_error,
+        },
     )
     
 def post_detail(request, pk):
